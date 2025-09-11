@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
     <html>
         <head><title>Todo List</title></head>
         <body>
-            <h1>My Devops Todo List</h1>
+            <h1>My AUTOMATED DevOps Todo List</h1>
             <ul>
                 ${todos.map(todo => `<li>${todo}</li>`).join('')}
             </ul>
