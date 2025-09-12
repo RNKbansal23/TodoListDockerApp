@@ -18,3 +18,13 @@ spec:
         image: rnkbansal/devops-todo-app:latest
         ports:
         - containerPort: 3000
+
+        envForm:
+        - configMapRef:
+            name:todo-app-secret
+        env:
+        - name: SECRET_MESSAGE_FORM_KBS
+        valueFrom:
+          secretKeyRef:
+          name: todo-app-secret
+          key: SECRET_MESSAGE
