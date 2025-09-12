@@ -14,17 +14,15 @@ spec:
     spec:
       containers:
       - name: todo-app-container
-        # my docker nameeeee
-        image: rnkbansal/devops-todo-app:latest
+        image: rnkbansal/devops-todo-app:latest # Make sure this is your username
         ports:
         - containerPort: 3000
-
-        envForm:
+        envFrom:
         - configMapRef:
-            name:todo-app-secret
-        env:
-        - name: SECRET_MESSAGE_FORM_KBS
-        valueFrom:
-          secretKeyRef:
-          name: todo-app-secret
-          key: SECRET_MESSAGE
+            name: todo-app-config
+        env: # <-- ADD THIS ENTIRE SECTION
+        - name: SECRET_MESSAGE_FROM_K8S # The name of the environment variable inside the container
+          valueFrom:
+            secretKeyRef:
+              name: todo-app-secret # The name of the Secret object we just created
+              key: SECRET_MESSAGE # The key within that Secret whose value we want
