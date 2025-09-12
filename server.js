@@ -21,6 +21,12 @@ app.get('/', (req, res) => {
                 <input type="text" name = "todo" placeholer = "Add a new task..." aria-required>
                 <button type='submit'>Add Task</button>
             </form>
+
+            <div style="margin-top: 30px; padding: 10px; border : 1px solid #ccc;">
+            <h2> Secret Features</h2>
+            ${proces.env.SECRET_MESSAGE_FORM_KBS ? `<p><strong>Secret Message:</strong>
+                ${process.env.SECRET_MESSAGE_FORM_KBS}</p>` : `<p> No secret found.</p>`}
+        </div>
         </body>
     </html>
         `;
