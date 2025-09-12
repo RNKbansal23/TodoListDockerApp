@@ -43,7 +43,17 @@ app.post('/add-todo', (req, res) => {
     }
     res.redirect('/');
 });
+app.get('/healthz/live', (req, res) => {
+  // For a simple app, if it's running, it's alive.
+  res.sendStatus(200);
+});
 
+// Readiness probe endpoint
+app.get('/healthz/ready', (req, res) => {
+  // For a simple app, if it's running, it's ready.
+  // In a real app, you might check database connections here.
+  res.sendStatus(200);
+});
 app.listen(port, () => {
     console.log(`Todo app listening at http://localhost:${port}`);
 });

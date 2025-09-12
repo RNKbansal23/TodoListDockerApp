@@ -20,9 +20,25 @@ spec:
         envFrom:
         - configMapRef:
             name: todo-app-config
-        env: # <-- ADD THIS ENTIRE SECTION
-        - name: SECRET_MESSAGE_FROM_K8S # The name of the environment variable inside the container
+        env:
+        - name: SECRET_MESSAGE_FROM_K8S
           valueFrom:
             secretKeyRef:
-              name: todo-app-secret # The name of the Secret object we just created
-              key: SECRET_MESSAGE # The key within that Secret whose value we want
+              name: todo-app-secret
+              key: SECRET_MESSAGE
+        
+        # --- ADD THE LIVENESS PROBE ---
+        livenessProbe:
+          httpGet:
+            path: /healthz/live  # The URL path to check
+            port: 3000          # The port inside the container
+          initialDelaySeconds: 5  # Wait 5 seconds after the container starts before the first check
+          periodSeconds: 10       # Check every 10 seconds
+
+        # --- ADD THE READINESS PROBE ---
+        readinessProbe:
+          httpGet:
+            path: /healthz/ready # The URL path to check
+            port: 3000           # The port inside the container
+          initialDelaySeconds: 5   # Wait 5 seconds before the first check
+          periodSeconds: 10        # Check every 10 seconds
