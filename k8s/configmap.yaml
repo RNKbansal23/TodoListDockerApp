@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: todo-app-config
+data:
+  # This is the data that will be loaded as an environment variable
+  PAGE_TITLE: "My Title From a ConfigMap!"
