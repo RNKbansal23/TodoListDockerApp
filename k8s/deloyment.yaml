@@ -26,6 +26,18 @@ spec:
             secretKeyRef:
               name: todo-app-secret
               key: SECRET_MESSAGE
+
+        - name: POSTGRES_HOST
+          value: "postgres-service" # This is the magic! Kubernetes DNS lets us use the Service name.
+        - name: POSTGRES_DB
+          value: "postgres" # This is the default database name in the postgres image
+        - name: POSTGRES_USER
+          value: "postgres" # This is the default user in the postgres image
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret # The secret we created for postgres
+              key: POSTGRES_PASSWORD # The key within that secret
         
         # --- ADD THE LIVENESS PROBE ---
         livenessProbe:
