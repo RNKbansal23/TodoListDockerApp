@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+app.use(express.static('public'));
 const port = 3000;
 
 app.use(express.json());
@@ -11,7 +12,8 @@ app.get('/', (req, res) => {
     // ... inside the app.get('/' ... route handler
 let html = `
     <html>
-        <head><title>Todo List</title></head>
+        <head><title>Todo List</title>
+         <link rel="stylesheet" href="/styles.css"></head>
         <body>
             <h1>${process.env.PAGE_TITLE || "My Default Todo List"}</h1>
             <ul>
