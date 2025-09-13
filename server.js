@@ -54,7 +54,19 @@ app.get('/', async (req, res) => {
             <body>
                 <h1>${process.env.PAGE_TITLE || "My Default Todo List"}</h1>
                 <ul>
-                    ${todos.map(todo => `<li>${todo.task}</li>`).join('')}
+                    <ul>
+    ${todos.map(todo => `
+        <li style="text-decoration: ${todo.completed ? 'line-through' : 'none'};">
+            ${todo.task}
+            <!-- Add a completion form only if the task is NOT completed -->
+            ${!todo.completed ? `
+                <form action="/complete-todo/${todo.id}" method="post" style="display: inline; margin-left: 10px;">
+                    <button type="submit">Complete</button>
+                </form>
+            ` : ''}
+        </li>
+    `).join('')}
+</ul>
                 </ul>
                 <form action="/add-todo" method="post">
                     <input type="text" name="todo" placeholder="Add a new task..." required>
@@ -87,6 +99,19 @@ app.post('/add-todo', async (req, res) => {
   }
   res.redirect('/');
 });
+// Handle completing a todo
+app.post('/complete-todo/:id', async (req, res) => {
+  const todoId = req.params.id;
+  if (todoId) {
+    console.log(`Completing task with id: ${todoId}`);
+    try {
+      await pool.query('UPDATE todos SET completed = TRUE WHERE id = $1', [todoId]);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  res.redirect('/');
+});
 
 // --- HEALTH CHECK ENDPOINTS ---
 app.get('/healthz/live', (req, res) => { res.sendStatus(200); });
@@ -97,4 +122,11 @@ app.get('/healthz/ready', (req, res) => { res.sendStatus(200); });
 app.listen(port, async () => {
   await createTable(); // Ensure the table exists before we start listening
   console.log(`Todo app listening at http://localhost:${port}`);
+  await client.query(`
+  CREATE TABLE IF NOT EXISTS todos (
+    id SERIAL PRIMARY KEY,
+    task VARCHAR(255) NOT NULL,
+    completed BOOLEAN DEFAULT FALSE
+  );
+`);
 });
