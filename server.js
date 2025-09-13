@@ -15,13 +15,15 @@ const pool = new Pool({
 });
 
 // --- FUNCTION TO CREATE TABLE ON STARTUP ---
+// --- FUNCTION TO CREATE TABLE ON STARTUP ---
 const createTable = async () => {
   const client = await pool.connect();
   try {
     await client.query(`
       CREATE TABLE IF NOT EXISTS todos (
         id SERIAL PRIMARY KEY,
-        task VARCHAR(255) NOT NULL
+        task VARCHAR(255) NOT NULL,
+        completed BOOLEAN DEFAULT FALSE  -- <-- ADD THIS LINE
       );
     `);
     console.log('"todos" table is successfully created or already exists.');
@@ -53,8 +55,9 @@ app.get('/', async (req, res) => {
             </head>
             <body>
                 <h1>${process.env.PAGE_TITLE || "My Default Todo List"}</h1>
-                <ul>
-                    <ul>
+            
+           <!-- Inside the HTML string -->
+<ul>
     ${todos.map(todo => `
         <li style="text-decoration: ${todo.completed ? 'line-through' : 'none'};">
             ${todo.task}
@@ -67,7 +70,7 @@ app.get('/', async (req, res) => {
         </li>
     `).join('')}
 </ul>
-                </ul>
+            
                 <form action="/add-todo" method="post">
                     <input type="text" name="todo" placeholder="Add a new task..." required>
                     <button type="submit">Add Task</button>
@@ -119,14 +122,9 @@ app.get('/healthz/ready', (req, res) => { res.sendStatus(200); });
 
 
 // --- START THE SERVER ---
+// --- START THE SERVER ---
 app.listen(port, async () => {
   await createTable(); // Ensure the table exists before we start listening
   console.log(`Todo app listening at http://localhost:${port}`);
-  await client.query(`
-  CREATE TABLE IF NOT EXISTS todos (
-    id SERIAL PRIMARY KEY,
-    task VARCHAR(255) NOT NULL,
-    completed BOOLEAN DEFAULT FALSE
-  );
-`);
+  // DELETE THE CRASHING CODE THAT WAS HERE
 });
