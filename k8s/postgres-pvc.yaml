@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+spec:
+  # This specifies how the volume can be mounted. ReadWriteOnce is standard.
+  accessModes:
+    - ReadWriteOnce
+  # This is where we request the specific amount of storage.
+  resources:
+    requests:
+      storage: 256Mi
