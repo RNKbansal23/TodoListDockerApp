@@ -10,7 +10,7 @@ pipeline{
     stages {
         stage('Checkout Code'){
             steps{
-                git 'https://github.com/RNKbansal23/TodoListDockerApp.git'
+               git branch: 'main', url: 'https://github.com/RNKBansal23/TodoListDockerApp.git'
 
             }
         }
