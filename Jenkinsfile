@@ -7,13 +7,11 @@ pipeline{
         DOCKER_IMAGE_NAME = "rnkbansal/devops-todo-app"
     }
 
-    stages {
-        stage('Checkout Code'){
-            steps{
-               git branch: 'main', url: 'https://github.com/RNKBansal23/TodoListDockerApp.git'
-
-            }
-        }
+   stage('Checkout Code') {
+    steps {
+        git branch: 'main', url: 'https://github.com/RNKBansal23/TodoListDockerApp.git'
+    }
+}
 
         stage('Run Linter'){
             steps{
