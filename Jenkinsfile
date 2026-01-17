@@ -1,22 +1,24 @@
-pipeline{
+pipeline {
     agent any
 
-
-    environment{
-        DOCCKERHUB_CREDIENTIALS_ID = 'dockerhub-credentials'
+    environment {
+        // FIXED: Correct spelling
+        DOCKERHUB_CREDENTIALS_ID = 'dockerhub-credentials'
         DOCKER_IMAGE_NAME = "rnkbansal/devops-todo-app"
     }
 
-   stage('Checkout Code') {
-    steps {
-        git branch: 'main', url: 'https://github.com/RNKBansal23/TodoListDockerApp.git'
-    }
-}
+    stages {
+        stage('Checkout Code'){
+            steps{
+               git branch: 'main', url: 'https://github.com/RNKBansal23/TodoListDockerApp.git'
+            }
+        }
 
         stage('Run Linter'){
             steps{
                 script{
-                    docker.image('node:18-alpine').inside{
+                    // This step requires Jenkins to be able to talk to Docker!
+                    docker.image('node:18-alpine').inside {
                         sh 'npm install'
                         sh 'npm run lint'
                     }
@@ -27,19 +29,20 @@ pipeline{
         stage('Build Docker Image'){
             steps{
                 script{
-                    def dockerImage = docker.build(DOCKER_IMAGE_NAME, '.')
+                    docker.build(DOCKER_IMAGE_NAME, '.')
                 }
             }
         }
-        stage('Push to Dockr Hub'){
+
+        stage('Push to Docker Hub'){
             steps{
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com, DOCKER_CREDENTIALS_ID'){
+                    // FIXED: Added closing quote after .com, and fixed variable name
+                    docker.withRegistry('https://registry.hub.docker.com', DOCKERHUB_CREDENTIALS_ID) {
                         docker.image(DOCKER_IMAGE_NAME).push('latest')
                     }
                 }
             }
         }
-
     }
 }
