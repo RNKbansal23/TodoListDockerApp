@@ -1,6 +1,6 @@
 # 📝 TodoList Docker App – DevOps Learning Project
 
-## 📌 Project Overview
+## 📌 Project Overview and setup
 
 The **TodoList Docker App** is a learning-focused, end-to-end DevOps project.  
 It is a **real-time, stateful web application** where users can:
